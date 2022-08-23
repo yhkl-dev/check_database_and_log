@@ -21,8 +21,13 @@ def read_config(config_file_path: str) -> AttrDict:
 class GlobalConfig:
 
     def __init__(self) -> None:
-        self._config = config.read(CONFIG_FILE_PATH)
+        self._config = configparser.ConfigParser()
+        self._config.read(CONFIG_FILE_PATH)
+        print(self._config)
 
     @property
     def email_info(self):
-        return {}
+        return AttrDict({
+            "SERVER": self._config["EMAIL"]["SERVER"],
+            "FROM": self._config["EMAIL"]["FROM"],
+        })
