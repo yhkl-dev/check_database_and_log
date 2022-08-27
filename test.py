@@ -4,6 +4,7 @@ from email.utils import make_msgid, formatdate
 from email.mime.multipart import MIMEMultipart
 from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError, SMTPSenderRefused, SMTPException
 from config.config import GlobalConfig
+from email.mime.text import MIMEText
 
 EMAIL = GlobalConfig().EMAIL
 
@@ -22,7 +23,8 @@ def send_email(email_address: List[str], email_subject: str, email_message: str)
     msg['Reply-to'] = EMAIL.FROM
     msg['Message-id'] = make_msgid()
     msg['Date'] = formatdate()
-
+    texthtml = MIMEText(email_message, 'html')
+    msg.attach(texthtml)
     try:
         client = smtplib.SMTP_SSL(smtp_server)
         client.connect(smtp_server, 25)

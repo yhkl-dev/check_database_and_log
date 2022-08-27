@@ -1,10 +1,13 @@
 
 
 import smtplib
-from typing import List
-from email.utils import make_msgid, formatdate
 from email.mime.multipart import MIMEMultipart
-from smtplib import SMTPRecipientsRefused, SMTPAuthenticationError, SMTPSenderRefused, SMTPException
+from email.mime.text import MIMEText
+from email.utils import formatdate, make_msgid
+from smtplib import (SMTPAuthenticationError, SMTPException,
+                     SMTPRecipientsRefused, SMTPSenderRefused)
+from typing import List
+
 from config.config import GlobalConfig
 
 EMAIL = GlobalConfig().email_info
@@ -24,7 +27,8 @@ def send_email(email_address: List[str], email_subject: str, email_message: str)
     # msg['Reply-to'] = EMAIL.FROM
     msg['Message-id'] = make_msgid()
     msg['Date'] = formatdate()
-
+    texthtml = MIMEText(email_message, 'html')
+    msg.attach(texthtml)
     try:
         client = smtplib.SMTP_SSL(smtp_server)
         client.connect(smtp_server, 465)
